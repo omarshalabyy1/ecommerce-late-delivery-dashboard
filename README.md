@@ -182,11 +182,11 @@ The steps are named after the six layers. There is no database: each layer is a 
 
 The architecture: CSV files, Python and Power BI, no database:
 
-![High level architecture: 8 CSV files; Python, where config.py checks the inputs and analysis.ipynb applies the rules (11 asserts) and writes 5 CSV files, with sql/checks.sql matching 6 totals; Power BI, where Power Query loads the CSV files into 7 tables, 4 relationships and 5 region roles, and 23 DAX measures; Report pages, 5 pages and 56 visuals, 43 checks](docs/architecture.drawio.svg)
+![High level architecture: source files, Python, the output/ folder, Power BI Desktop and the report; Python also writes the README charts](docs/architecture.drawio.svg)
 
-Every table, the tables it reads, and its row count after one run:
+The steps, in the order they run:
 
-![Data flow, table by table: 8 input files, 8 pandas tables, then sale_orders (96,478), o, latest_review (98,673) and REGION_OF (27); in Power BI fact_sales 110,197 rows, three dimensions, report_settings and dim_date, the 23 measures and the report; 34 lines, one per table read](docs/data-flow.drawio.svg)
+![Data flow: input files, input check, load and health check, model tables, then the numbers and checks on one side and the Power BI model and report on the other](docs/data-flow.drawio.svg)
 
 The star schema Power BI builds from the files in `output/`:
 
