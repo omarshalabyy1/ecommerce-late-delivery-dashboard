@@ -180,13 +180,17 @@ The steps are named after the six layers. There is no database: each layer is a 
 | Analytical layer | The 23 DAX measures (`powerbi/03-measures.dax`) and the numbers in notebook sections 4 to 9 |
 | Reporting layer | The five Power BI pages and the three README charts (section 10) |
 
-Every table, the tables it is built from, and its row count after one run:
+The architecture: eight input files, six layers and no database, then Power BI and the README:
 
-![Data flow, table by table](docs/data-flow.svg)
+![High level architecture: 8 CSV files; Bronze, the files as received; Silver, 8 pandas tables, mapped and typed, 11 asserts; Gold, the rules; Semantic, 5 CSV files read by Power Query into 7 Power BI tables, 4 relationships and 5 region roles; Analytical, 23 DAX measures, 6 totals matched by sql/checks.sql; Reporting, 5 pages and 56 visuals, 43 checks](docs/architecture.drawio.svg)
+
+Every table, the tables it reads, and its row count after one run:
+
+![Data flow, table by table: 8 input files, 8 Silver tables, 4 Gold tables (sale_orders 96,478, o, latest_review 98,673, REGION_OF 27), fact_sales 110,197 rows, three dimensions, report_settings and dim_date, the 23 measures and the report; 34 lines, one per table read](docs/data-flow.drawio.svg)
 
 The star schema Power BI builds from the files in `output/`:
 
-![The star schema](docs/data-model.svg)
+![Star schema: fact_sales (110,197 rows) joined many to one to dim_date (1,096 days), dim_product (32,951), dim_seller (3,095) and dim_customer (99,441); report_settings and _Measures join nothing](docs/star-schema.drawio.svg)
 
 ## 🗂️ Data
 
