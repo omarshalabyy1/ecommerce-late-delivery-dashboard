@@ -18,10 +18,14 @@ Each regional manager can be limited to the sellers of their region (row-level s
 ## The fast way: open the generated report
 
 `sales-performance.pbip` is the finished report as a Power BI project, written by `build_pbip.py` from the files
-below and `config/client.yaml`. After the notebook has written `output/`:
+below and `config/client.yaml`. **Refresh with new data, in one line:** replace the files in `data/input/`, run
+`python config.py`, run the notebook, then click **Refresh** in Power BI Desktop. First time, after the notebook has
+written `output/`:
 
-1. `python powerbi/build_pbip.py` (only after a change to the config or to files 01 to 05).
-2. Open `powerbi/sales-performance.pbip` in Power BI Desktop and click **Refresh now** on the yellow bar.
+1. Open `powerbi/sales-performance.pbip` in Power BI Desktop.
+2. **Transform data → Edit parameters**: set `OutputFolder` to this repo's `output\` folder, ending with a backslash,
+   then **Close & Apply** and **Refresh now** on the yellow bar. (`python powerbi/build_pbip.py` writes that path into
+   the report for you; run it only after a change to the config or to files 01 to 05.)
 3. Compare the cards with `06-checks.md`. Every check was verified against the model running in Power BI Desktop
    on 2026-10-05, C1 to C43, and the five pages are in `screenshots/`.
 
