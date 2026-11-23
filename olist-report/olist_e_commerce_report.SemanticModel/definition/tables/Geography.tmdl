@@ -1,0 +1,83 @@
+table Geography
+	lineageTag: cfd5f0a6-fd0f-5a84-891b-17c223dcef49
+
+	column 'Geography Key'
+		dataType: string
+		isHidden
+		lineageTag: bd675b14-de09-518d-8b1b-46e82523ab0a
+		summarizeBy: none
+		sourceColumn: Geography Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: b106ef0f-cdfd-57b2-b438-a7592d613649
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 63db62be-e5da-54c9-a2c1-0086ae3357af
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: e1fe485f-0d06-59cc-89ba-4fa81bd9d7e5
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		formatString: 0.0000
+		lineageTag: 26faa52c-cd45-5dde-80f5-e7b505b7c9a0
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column Longitude
+		dataType: double
+		formatString: 0.0000
+		lineageTag: 517fd22e-7445-52ad-9cfb-03697b550261
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy Geography
+		lineageTag: 0c83a421-3ba5-53a0-a465-a1fe30c1834c
+
+		level Region
+			lineageTag: 7909c095-4f71-55ba-be85-77294a6ce3ec
+			column: Region
+
+		level State
+			lineageTag: ac5b82b4-c2fb-59a7-b932-1554cb832082
+			column: State
+
+		level City
+			lineageTag: e97a5117-05f9-59e9-8aac-f497bc6dcbd0
+			column: City
+
+	partition Geography = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(#"Data Folder" & "\Geography.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    #"Changed Types" = Table.TransformColumnTypes(#"Promoted Headers", {{"Geography Key", type text}, {"City", type text}, {"State", type text}, {"Region", type text}, {"Latitude", type number}, {"Longitude", type number}}, "en-US")
+				in
+				    #"Changed Types"
+
+	annotation PBI_ResultType = Table
+

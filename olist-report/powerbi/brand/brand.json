@@ -1,0 +1,23 @@
+{
+  "client": "Olist",
+  "source": "https://olist.com/ (logo_olist_rebrand.svg)",
+  "logo": "powerbi/brand/logo.png",
+  "accent": "#0A4EE4",
+  "dark": "#111B33",
+  "soft": "#E6EDFF",
+  "data_colors": [
+    "#0A4EE4",
+    "#111B33",
+    "#91B4FF",
+    "#5B6B7A",
+    "#E14E3A",
+    "#C9D3DC"
+  ],
+  "good": "#2E9E6B",
+  "neutral": "#8A94A0",
+  "bad": "#C2410C",
+  "text": "#0F2A3D",
+  "muted": "#5B6B7A",
+  "page": "#F4F6F8",
+  "accent_on_white_contrast": 6.52
+}

@@ -1,0 +1,110 @@
+{
+  "name": "OlistTheme",
+  "dataColors": [
+    "#0A4EE4",
+    "#111B33",
+    "#91B4FF",
+    "#5B6B7A",
+    "#E14E3A",
+    "#C9D3DC",
+    "#2E9E6B",
+    "#C2410C"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#0F2A3D",
+  "tableAccent": "#0A4EE4",
+  "good": "#2E9E6B",
+  "neutral": "#8A94A0",
+  "bad": "#C2410C",
+  "maximum": "#0A4EE4",
+  "center": "#E8EEF2",
+  "minimum": "#C9D3DC",
+  "null": "#C9D3DC",
+  "textClasses": {
+    "callout": {
+      "fontSize": 28,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#0F2A3D"
+    },
+    "title": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#0F2A3D"
+    },
+    "header": {
+      "fontSize": 11,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#0F2A3D"
+    },
+    "label": {
+      "fontSize": 10,
+      "fontFace": "Segoe UI",
+      "color": "#5B6B7A"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#E3E8EE"
+              }
+            },
+            "radius": 12
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": false
+          }
+        ],
+        "title": [
+          {
+            "show": false,
+            "fontColor": {
+              "solid": {
+                "color": "#0F2A3D"
+              }
+            },
+            "fontSize": 12,
+            "fontFamily": "Segoe UI Semibold",
+            "alignment": "left"
+          }
+        ],
+        "visualHeader": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F4F6F8"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}

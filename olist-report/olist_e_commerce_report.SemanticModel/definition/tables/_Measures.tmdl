@@ -1,0 +1,803 @@
+table _Measures
+	lineageTag: 6d98a75b-b0d4-5d7d-b7c0-b617ff4c6c82
+
+	/// Item prices of delivered orders, freight excluded.
+	measure Revenue = CALCULATE ( SUM ( Sales[Price] ), 'Order Status'[Order Status] = "Delivered" )
+		formatString: #,##0
+		displayFolder: Sales
+		lineageTag: 4ffd33aa-f785-5597-b2a2-775f44cc03e4
+
+	/// Delivered orders.
+	measure Orders = CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Order Status] = "Delivered" )
+		formatString: #,##0
+		displayFolder: Sales
+		lineageTag: 09a0b33a-6700-5086-8d03-ccc8667c8d5c
+
+	/// Items on delivered orders.
+	measure 'Items Sold' = CALCULATE ( COUNT ( Sales[Order Line] ), 'Order Status'[Order Status] = "Delivered" )
+		formatString: #,##0
+		displayFolder: Sales
+		lineageTag: fd0051ed-9cf2-59f4-bc9f-ee9db27a1651
+
+	/// Revenue divided by delivered orders.
+	measure 'Average Order Value' = DIVIDE ( [Revenue], [Orders] )
+		formatString: #,##0.00
+		displayFolder: Sales
+		lineageTag: d235fdb2-8069-5647-8913-907a886f23c3
+
+	/// Revenue divided by items sold.
+	measure 'Average Item Price' = DIVIDE ( [Revenue], [Items Sold] )
+		formatString: #,##0.00
+		displayFolder: Sales
+		lineageTag: 6aba3608-7ac6-5da6-8e91-2846cc6373f0
+
+	/// Freight charged on delivered orders.
+	measure Freight = CALCULATE ( SUM ( Sales[Freight] ), 'Order Status'[Order Status] = "Delivered" )
+		formatString: #,##0
+		displayFolder: Sales
+		lineageTag: c6e1ce54-c367-56bc-816b-aed131b9afab
+
+	/// Freight as a share of revenue.
+	measure 'Freight % of Revenue' = DIVIDE ( [Freight], [Revenue] )
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 658f6638-17fd-5350-8ccb-a75d1181d1e8
+
+	/// Share of the revenue of the selected products.
+	measure 'Share of Revenue %' = DIVIDE ( [Revenue], CALCULATE ( [Revenue], ALLSELECTED ( Product ) ) )
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 7559247a-8600-59e9-9ad7-1d851cfb7be5
+
+	/// Revenue share of the best-selling category in the selection.
+	measure 'Top Category Share' = DIVIDE ( MAXX ( ALLSELECTED ( Product[Category] ), [Revenue] ), CALCULATE ( [Revenue], ALLSELECTED ( Product ) ) )
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: fb2c655d-7272-5e04-8b06-e1640111de07
+
+	/// Name of the category with the most revenue in the selection.
+	measure 'Top Category' = CONCATENATEX ( TOPN ( 1, VALUES ( Product[Category] ), [Revenue] ), Product[Category], ", " )
+		displayFolder: Sales
+		lineageTag: 36c286f2-d4c4-5ac1-9c17-834bfddb21bc
+
+	/// Product categories with revenue (the unknown category is not counted).
+	measure 'Categories With Sales' = COUNTROWS ( FILTER ( VALUES ( Product[Category] ), Product[Category] <> "Unknown" && [Revenue] > 0 ) )
+		formatString: #,##0
+		displayFolder: Sales
+		lineageTag: fb8bf56d-7e4b-5ebb-a5be-cb79da95fc8b
+
+	/// Hidden: mean latitude of the cities in the cell, for the map (the map needs an aggregate beside Location).
+	measure 'City Latitude' = AVERAGE ( Geography[Latitude] )
+		formatString: 0.0000
+		isHidden
+		displayFolder: Map
+		lineageTag: fefa9765-d6e4-568a-94f7-f4d40fa2f6d2
+
+	/// Hidden: mean longitude of the cities in the cell, for the map (the map needs an aggregate beside Location).
+	measure 'City Longitude' = AVERAGE ( Geography[Longitude] )
+		formatString: 0.0000
+		isHidden
+		displayFolder: Map
+		lineageTag: 1e6747b3-5956-595e-95f6-7629f9bbd268
+
+	/// Hidden: hex colour for the chart, the leader in the accent and the rest quiet. Leader by revenue.
+	measure 'Category Leader Colour' = IF ( RANKX ( ALLSELECTED ( Product[Category] ), [Revenue] ) = 1, "#0A4EE4", "#91B4FF" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 1aa91dc0-83a1-5618-a72f-50bbb5b90d18
+
+	/// Hidden: hex colour for the chart, the leader in the accent and the rest quiet. Leader by orders.
+	measure 'State Orders Leader Colour' = IF ( RANKX ( ALLSELECTED ( Geography[State] ), [Orders] ) = 1, "#0A4EE4", "#91B4FF" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 12db2427-c228-50fb-bee1-b0693089ad6d
+
+	/// Hidden: hex colour for the chart, the leader in the accent and the rest quiet. Best weekday by revenue.
+	measure 'Weekday Leader Colour' = IF ( RANKX ( ALLSELECTED ( 'Date'[Weekday] ), [Revenue] ) = 1, "#0A4EE4", "#91B4FF" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: dbd294b5-e521-592f-b8aa-1c67129e519b
+
+	/// Hidden: hex colour for the chart, the leader in the accent and the rest quiet. Best price band by items sold.
+	measure 'Price Band Leader Colour' = IF ( RANKX ( ALLSELECTED ( 'Price Band'[Price Band] ), [Items Sold] ) = 1, "#0A4EE4", "#91B4FF" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 54f93d94-60bc-5b39-9757-810d15d6f6f2
+
+	/// Hidden: hex colour for the chart, the leader in the accent and the rest quiet. Leader by customers.
+	measure 'City Leader Colour' = IF ( RANKX ( ALLSELECTED ( Geography[City] ), [Customers] ) = 1, "#0A4EE4", "#91B4FF" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: f60b1ef0-2e36-521b-ae2f-af520a01254a
+
+	/// Hidden: hex colour for the chart, the leader in the accent and the rest quiet. Leader by revenue.
+	measure 'Seller Leader Colour' = IF ( RANKX ( ALLSELECTED ( Seller[Seller] ), [Revenue] ) = 1, "#0A4EE4", "#91B4FF" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 4bb632f5-d68e-5815-99a3-dc38705f25fa
+
+	/// Hidden: late deliveries % over everything the slicers allow, the yardstick for colours.
+	measure 'Late Deliveries % Overall' = CALCULATE ( [Late Deliveries %], ALLSELECTED () )
+		formatString: 0.0%
+		isHidden
+		displayFolder: Delivery
+		lineageTag: f34aba31-02e1-5b3a-8e25-2f1545c2c6ae
+
+	/// Hidden: average delivery days over everything the slicers allow, the yardstick for colours.
+	measure 'Average Delivery Days Overall' = CALCULATE ( [Average Delivery Days], ALLSELECTED () )
+		formatString: 0.0
+		isHidden
+		displayFolder: Delivery
+		lineageTag: 385edab6-e7e2-5bf4-ae66-a2d137eec280
+
+	/// Hidden: average review over everything the slicers allow, the yardstick for colours.
+	measure 'Average Review Overall' = CALCULATE ( [Average Review], ALLSELECTED () )
+		formatString: 0.00
+		isHidden
+		displayFolder: Reviews
+		lineageTag: 774600fa-e92a-5403-aa93-135705e204e1
+
+	/// Hidden: hex colour, bad when a state is later than the overall rate, else neutral.
+	measure 'Late State Colour' = IF ( [Late Deliveries %] > [Late Deliveries % Overall], "#C2410C", "#8A94A0" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 5a545195-eaf8-5f19-b152-2fe1e0e0e92a
+
+	/// Hidden: hex colour, bad when a state is both slower and later than overall, else neutral.
+	measure 'State Delivery Colour' = IF ( [Late Deliveries %] > [Late Deliveries % Overall] && [Average Delivery Days] > [Average Delivery Days Overall], "#C2410C", "#8A94A0" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 49b8bf86-09fd-54c1-8203-0d9e77ef2436
+
+	/// Hidden: hex colour, bad when a seller is both later and rated lower than overall, else quiet.
+	measure 'Seller Risk Colour' = IF ( [Late Deliveries %] > [Late Deliveries % Overall] && [Average Review] < [Average Review Overall], "#C2410C", "#91B4FF" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: de09e6f5-7152-52bc-b7bb-09e0c897fa65
+
+	/// Hidden: hex colour of a review score, 1 to 2 bad, 3 neutral, 4 to 5 good.
+	measure 'Score Class Colour' = VAR s = SELECTEDVALUE ( Sales[Review Score] ) RETURN SWITCH ( TRUE (), s <= 2, "#C2410C", s = 3, "#8A94A0", s >= 4, "#2E9E6B", "#8A94A0" )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 2d7cae81-c20f-5be7-bc56-9be9808f1454
+
+	/// Revenue minus revenue of the same days last year; blank unless one year is selected.
+	measure 'Revenue Change vs LY' = VAR Prev = [Revenue LY] RETURN IF ( NOT ISBLANK ( Prev ), [Revenue] - Prev )
+		formatString: +#,##0;-#,##0;0
+		displayFolder: Growth
+		lineageTag: b48bc923-cbb2-59df-b116-88c1dca822ac
+
+	/// Purchase date of the latest delivered order, whatever is selected.
+	measure 'Last Sale Date' = CALCULATE ( MAX ( Sales[Purchase Date] ), REMOVEFILTERS (), 'Order Status'[Order Status] = "Delivered" )
+		formatString: yyyy-mm-dd
+		displayFolder: Growth
+		lineageTag: 37e5a678-e07d-5d4a-baea-44ece131b7b6
+
+	/// Revenue of the same days one year earlier, up to the last sale date; blank unless one year is selected.
+	measure 'Revenue LY' =
+			VAR LastDay = [Last Sale Date]
+			RETURN
+			    IF (
+			        HASONEVALUE ( 'Date'[Year] ),
+			        CALCULATE ( [Revenue], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			    )
+		formatString: #,##0
+		displayFolder: Growth
+		lineageTag: d492991d-36f0-5296-b4da-23e09e731e63
+
+	/// Revenue change against last year, short form for a card value.
+	measure 'Revenue Growth %' = [Revenue vs LY %]
+		formatString: \▲0.0%;\▼0.0%;0.0%
+		displayFolder: Growth
+		lineageTag: 322d7356-503b-519b-af0b-58396181b0e5
+
+	/// Revenue change against the same days of last year.
+	measure 'Revenue vs LY %' =
+			VAR Prev = [Revenue LY]
+			RETURN IF ( NOT ISBLANK ( Prev ), DIVIDE ( [Revenue] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Growth
+		lineageTag: 2e759713-5128-59c3-b963-486845ea72b4
+
+	/// People with a delivered order.
+	measure Customers = CALCULATE ( DISTINCTCOUNT ( Sales[Customer Key] ), 'Order Status'[Order Status] = "Delivered" )
+		formatString: #,##0
+		displayFolder: Customers
+		lineageTag: 040887a3-fac5-5a64-b80f-3b3c9dd765f1
+
+	/// People whose first delivered order falls in the selection.
+	measure 'New Customers' = CALCULATE ( DISTINCTCOUNT ( Sales[Customer Key] ), 'Order Status'[Order Status] = "Delivered", Sales[Is First Order] = 1 )
+		formatString: #,##0
+		displayFolder: Customers
+		lineageTag: 28959a8b-b52a-50b0-8a4e-a7fe6d8ae033
+
+	/// People with a delivered order that was not their first.
+	measure 'Returning Customers' = CALCULATE ( DISTINCTCOUNT ( Sales[Customer Key] ), 'Order Status'[Order Status] = "Delivered", Sales[Is First Order] = 0 )
+		formatString: #,##0
+		displayFolder: Customers
+		lineageTag: 74a034cf-72c3-5248-953b-a317baf7ceda
+
+	/// Delivered orders that are a person's first.
+	measure 'New Orders' = CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Order Status] = "Delivered", Sales[Is First Order] = 1 )
+		formatString: #,##0
+		displayFolder: Customers
+		lineageTag: ce9cc6f3-22e2-5b69-af59-237d254ad5ba
+
+	/// Delivered orders that are not a person's first.
+	measure 'Returning Orders' = CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Order Status] = "Delivered", Sales[Is First Order] = 0 )
+		formatString: #,##0
+		displayFolder: Customers
+		lineageTag: 800c06ec-3a8e-5bcd-8839-1847b20838bf
+
+	/// Lifetime: people with a second delivered order, out of all people, whatever dates are selected.
+	measure 'Repeat Customers %' = DIVIDE ( CALCULATE ( [Returning Customers], ALL ( 'Date' ) ), CALCULATE ( [Customers], ALL ( 'Date' ) ) )
+		formatString: 0.0%
+		displayFolder: Customers
+		lineageTag: 1c0662c7-46e3-5b18-abed-9b0be94e7f85
+
+	/// Revenue divided by customers.
+	measure 'Revenue per Customer' = DIVIDE ( [Revenue], [Customers] )
+		formatString: #,##0.00
+		displayFolder: Customers
+		lineageTag: 6471907d-9d9c-57b9-8a7f-44e2e8539a64
+
+	/// Delivered orders divided by customers.
+	measure 'Orders per Customer' = DIVIDE ( [Orders], [Customers] )
+		formatString: #,##0.00
+		displayFolder: Customers
+		lineageTag: 44cd09be-66b2-5ac1-8efd-1b99af9fcee1
+
+	/// Orders delivered, with a delivery date.
+	measure 'Delivered Orders' = CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Delivery Status] IN { "On time", "Late" } )
+		formatString: #,##0
+		displayFolder: Delivery
+		lineageTag: 38fa8c4c-d933-599e-a093-f2b1ea863d5c
+
+	/// Orders delivered after the estimated date (by date).
+	measure 'Late Orders' = CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Delivery Status] = "Late" )
+		formatString: #,##0
+		displayFolder: Delivery
+		lineageTag: d98d2551-1610-57d3-a42b-f7b45a7c98cc
+
+	/// Late orders as a share of delivered orders.
+	measure 'Late Deliveries %' = DIVIDE ( [Late Orders], [Delivered Orders] )
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: 736e4cd1-4ffa-566c-befe-1bc3764770c5
+
+	/// Average days from purchase to delivery, per order.
+	measure 'Average Delivery Days' = CALCULATE ( AVERAGEX ( VALUES ( Sales[Order Id] ), CALCULATE ( MAX ( Sales[Delivery Days] ) ) ), 'Order Status'[Delivery Status] IN { "On time", "Late" } )
+		formatString: 0.0
+		displayFolder: Delivery
+		lineageTag: fe612df8-4228-5dc7-8e71-5520907ad008
+
+	/// Average days past the estimated date, late orders only.
+	measure 'Average Days Late' = CALCULATE ( AVERAGEX ( VALUES ( Sales[Order Id] ), CALCULATE ( MAX ( Sales[Days Late] ) ) ), 'Order Status'[Delivery Status] = "Late" )
+		formatString: 0.0
+		displayFolder: Delivery
+		lineageTag: c624ee50-ad5a-5d4b-8534-6f54bcc0e818
+
+	/// Every order whatever its status.
+	measure 'All Orders' = DISTINCTCOUNT ( Sales[Order Id] )
+		formatString: #,##0
+		displayFolder: Delivery
+		lineageTag: bd20ff64-3279-512b-9ab1-10086706730a
+
+	/// Orders that were canceled or became unavailable.
+	measure 'Cancelled Orders' = CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Order Status] IN { "Canceled", "Unavailable" } )
+		formatString: #,##0
+		displayFolder: Delivery
+		lineageTag: 6135e3f3-3f2d-5934-aacf-0592d2687f94
+
+	/// Cancelled orders as a share of all orders.
+	measure 'Cancellation %' = DIVIDE ( [Cancelled Orders], [All Orders] )
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: 21729608-20a8-5cd5-a7cc-b483e0d0ac44
+
+	/// Delivered orders with a review (latest review counts); keeps a score on the axis, so each score shows its own count.
+	measure 'Reviewed Orders' = CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Order Status] = "Delivered", KEEPFILTERS ( NOT ISBLANK ( Sales[Review Score] ) ) )
+		formatString: #,##0
+		displayFolder: Reviews
+		lineageTag: 2e598e11-1c0f-5d7d-8578-adb294acc9e2
+
+	/// Delivered orders that have a review.
+	measure 'Review Rate %' = DIVIDE ( [Reviewed Orders], [Orders] )
+		formatString: 0.0%
+		displayFolder: Reviews
+		lineageTag: efb14c71-6e36-5f1e-b4fd-39d49790e302
+
+	/// Average of the latest review score per delivered order.
+	measure 'Average Review' = CALCULATE ( AVERAGEX ( VALUES ( Sales[Order Id] ), CALCULATE ( MAX ( Sales[Review Score] ) ) ), 'Order Status'[Order Status] = "Delivered" )
+		formatString: 0.00
+		displayFolder: Reviews
+		lineageTag: e165a5f1-9e68-50a2-b8b8-77570c6fc96c
+
+	/// Reviewed orders scored 1.
+	measure 'One Star %' = DIVIDE ( CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Order Status] = "Delivered", Sales[Review Score] = 1 ), [Reviewed Orders] )
+		formatString: 0.0%
+		displayFolder: Reviews
+		lineageTag: a94cd8d4-b7f1-5627-ad88-2d94c6a804e4
+
+	/// Reviewed orders scored 5.
+	measure 'Five Star %' = DIVIDE ( CALCULATE ( DISTINCTCOUNT ( Sales[Order Id] ), 'Order Status'[Order Status] = "Delivered", Sales[Review Score] = 5 ), [Reviewed Orders] )
+		formatString: 0.0%
+		displayFolder: Reviews
+		lineageTag: d6164280-1698-5216-8e34-76770d459b02
+
+	/// Average review of orders delivered on time.
+	measure 'Average Review On Time' = CALCULATE ( [Average Review], 'Order Status'[Delivery Status] = "On time" )
+		formatString: 0.00
+		displayFolder: Reviews
+		lineageTag: c277a957-bba1-5714-a7ea-ac153492c539
+
+	/// Average review of late orders.
+	measure 'Average Review Late' = CALCULATE ( [Average Review], 'Order Status'[Delivery Status] = "Late" )
+		formatString: 0.00
+		displayFolder: Reviews
+		lineageTag: e6c2070e-528e-56f6-8706-f9cc7877dfbb
+
+	/// Score lost when an order arrives late.
+	measure 'Review Gap Late vs On Time' = [Average Review Late] - [Average Review On Time]
+		formatString: \▲" "0.00" vs on time";\▼" "0.00" vs on time";0.00" vs on time"
+		displayFolder: Reviews
+		lineageTag: d358329c-6c5b-58d6-be93-c2d0c19db25c
+
+	/// Hidden: orders the lowest-rated chart; categories and sellers under 200 orders rank last.
+	measure 'Review Rank Helper' = IF ( [Orders] >= 200, [Average Review], 6 )
+		formatString: 0.00
+		isHidden
+		displayFolder: Reviews
+		lineageTag: 1a2c65c4-9723-5f6f-9a8a-485cc5c6af68
+
+	/// Share of reviewed orders at each score, within the other filters.
+	measure 'Review Share %' = DIVIDE ( [Reviewed Orders], CALCULATE ( [Reviewed Orders], ALL ( Sales[Review Score] ) ) )
+		formatString: 0.0%
+		displayFolder: Reviews
+		lineageTag: 095f3691-7446-5fbf-aad8-615dc0a0744a
+
+	/// Payments on delivered orders; includes freight and vouchers, so it is above revenue.
+	measure 'Payment Value' = CALCULATE ( SUM ( Payments[Payment Value] ), 'Order Status'[Order Status] = "Delivered" )
+		formatString: #,##0
+		displayFolder: Payments
+		lineageTag: e1164fef-f143-5356-b5fb-bfe89ea406ee
+
+	/// Payment value per delivered order.
+	measure 'Average Payment per Order' = DIVIDE ( [Payment Value], CALCULATE ( DISTINCTCOUNT ( Payments[Order Id] ), 'Order Status'[Order Status] = "Delivered" ) )
+		formatString: #,##0.00
+		displayFolder: Payments
+		lineageTag: 0275d12e-c2b0-57d5-92d1-0baed0b47b79
+
+	/// Payment value per single payment.
+	measure 'Average Payment' = DIVIDE ( [Payment Value], CALCULATE ( COUNTROWS ( Payments ), 'Order Status'[Order Status] = "Delivered" ) )
+		formatString: #,##0.00
+		displayFolder: Payments
+		lineageTag: 039ccc54-077a-57cd-bde7-8756ae9d347b
+
+	/// Share of payment value by type, within the selection.
+	measure 'Payment Share %' = DIVIDE ( [Payment Value], CALCULATE ( [Payment Value], ALLSELECTED ( 'Payment Type' ) ) )
+		formatString: 0.0%
+		displayFolder: Payments
+		lineageTag: b92e6499-68ab-564b-8002-c996f1f8a2f5
+
+	/// Payment value paid by credit card.
+	measure 'Credit Card Share %' = DIVIDE ( CALCULATE ( [Payment Value], 'Payment Type'[Payment Type] = "Credit card" ), [Payment Value] )
+		formatString: 0.0%
+		displayFolder: Payments
+		lineageTag: 67003e47-04cd-5379-b611-f3b5dcc8d500
+
+	/// Payment value paid by boleto.
+	measure 'Boleto Share %' = DIVIDE ( CALCULATE ( [Payment Value], 'Payment Type'[Payment Type] = "Boleto" ), [Payment Value] )
+		formatString: 0.0%
+		displayFolder: Payments
+		lineageTag: e0c1c54d-c9d5-567e-9595-69150ce1c918
+
+	/// Average installments of a credit card payment.
+	measure 'Average Installments' = CALCULATE ( AVERAGE ( Payments[Installments] ), 'Payment Type'[Payment Type] = "Credit card", 'Order Status'[Order Status] = "Delivered" )
+		formatString: 0.0
+		displayFolder: Payments
+		lineageTag: 7ff151b2-6d27-548b-86e0-0442477725c5
+
+	/// Sellers with a delivered item.
+	measure 'Active Sellers' = CALCULATE ( DISTINCTCOUNT ( Sales[Seller Key] ), 'Order Status'[Order Status] = "Delivered" )
+		formatString: #,##0
+		displayFolder: Sellers
+		lineageTag: 52cbce53-be93-5ab9-8d19-a458bb95ad00
+
+	/// Revenue divided by active sellers.
+	measure 'Revenue per Seller' = DIVIDE ( [Revenue], [Active Sellers] )
+		formatString: #,##0
+		displayFolder: Sellers
+		lineageTag: 4235f7f4-7eaa-56ed-9ea8-dba340ad98d0
+
+	/// Revenue of the same days last year, in words, for the comparison line of a card.
+	measure 'Revenue LY Text' = IF ( ISBLANK ( [Revenue LY] ), BLANK (), "Last year " & FORMAT ( [Revenue LY], "#,##0" ) )
+		displayFolder: Comparisons
+		lineageTag: 1b987453-bb23-5c2e-bd09-197acef794bd
+
+	/// Lifetime count behind Repeat Customers %, in words, for the comparison line of a card.
+	measure 'Returning Customers Text' = FORMAT ( CALCULATE ( [Returning Customers], ALL ( 'Date' ) ), "#,##0" ) & " of " & FORMAT ( CALCULATE ( [Customers], ALL ( 'Date' ) ), "#,##0" ) & " bought again"
+		displayFolder: Comparisons
+		lineageTag: 829ec7f5-65fd-537c-a178-f92689c10294
+
+	/// Name of the best-selling category, in words, for the comparison line of a card.
+	measure 'Top Category Text' = "Leads: " & [Top Category]
+		displayFolder: Comparisons
+		lineageTag: 79260964-7bdc-5ec6-ba06-510af1db81c2
+
+	/// Hidden: ranks states by late deliveries; those under 200 delivered orders rank last so small samples never reach the top 10.
+	measure 'Late Rank Helper' = IF ( [Delivered Orders] >= 200, [Late Deliveries %], -1 )
+		formatString: 0.0%
+		isHidden
+		displayFolder: Delivery
+		lineageTag: 065f8959-33d8-5fe2-829c-78a02927d982
+
+	/// Hidden: ranks states by delivery days; those under 200 delivered orders rank last so small samples never reach the top 10.
+	measure 'Delivery Days Rank Helper' = IF ( [Delivered Orders] >= 200, [Average Delivery Days], -1 )
+		formatString: 0.0
+		isHidden
+		displayFolder: Delivery
+		lineageTag: 893cbd93-830a-5c8d-8bd0-c113eab1949a
+
+	/// Orders: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Orders vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Orders], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Orders] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 76dcd735-5b64-5b92-99cf-5bb14fd71fcd
+
+	/// Average Order Value: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Average Order Value vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Average Order Value], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Average Order Value] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: b0af6388-6e68-567c-877a-7ee3e9e83b0b
+
+	/// Customers: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Customers vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Customers], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Customers] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 4c25f455-dec0-55ae-a1c3-847dfd9f0517
+
+	/// Items Sold: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Items Sold vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Items Sold], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Items Sold] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: bd182a17-f102-528d-b3b8-b15114890bf8
+
+	/// Average Item Price: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Average Item Price vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Average Item Price], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Average Item Price] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 5befc974-5e01-57bf-910c-f455b0e7a0dd
+
+	/// Revenue per Customer: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Revenue per Customer vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Revenue per Customer], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Revenue per Customer] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 70264b63-4e11-5391-aa86-b6d286b40517
+
+	/// New Customers: percent change against the same days of last year; blank unless one year is selected.
+	measure 'New Customers vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [New Customers], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [New Customers] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 46ec075f-d185-5ee2-a929-9f2fcbd5a7cd
+
+	/// Orders per Customer: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Orders per Customer vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Orders per Customer], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Orders per Customer] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: a5d5505f-525a-505f-b3c0-eac1f3a27131
+
+	/// Late Orders: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Late Orders vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Late Orders], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Late Orders] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 25ee3048-87ae-5dd4-bf4c-a747a0cfe9cb
+
+	/// Active Sellers: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Active Sellers vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Active Sellers], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Active Sellers] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 50182923-9859-590c-b525-9b395cc94531
+
+	/// Revenue per Seller: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Revenue per Seller vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Revenue per Seller], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Revenue per Seller] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 339076a0-5718-539c-99e7-3d8e7476c248
+
+	/// Categories With Sales: percent change against the same days of last year; blank unless one year is selected.
+	measure 'Categories With Sales vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Categories With Sales], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), DIVIDE ( [Categories With Sales] - Prev, Prev ) )
+		formatString: \▲" "0.0%" vs LY";\▼" "0.0%" vs LY";0.0%" vs LY"
+		displayFolder: Comparisons
+		lineageTag: e8c078d7-3bef-5346-ae47-501f983f61bd
+
+	/// Average Review: difference against the same days of last year; blank unless one year is selected.
+	measure 'Average Review vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Average Review], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), [Average Review] - Prev )
+		formatString: \▲" "0.00" vs LY";\▼" "0.00" vs LY";0.00" vs LY"
+		displayFolder: Comparisons
+		lineageTag: 596d14f8-4748-59bd-9e8b-6a08375673e0
+
+	/// Average Delivery Days: difference against the same days of last year; blank unless one year is selected.
+	measure 'Average Delivery Days vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Average Delivery Days], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), [Average Delivery Days] - Prev )
+		formatString: \▲" "0.0" vs LY";\▼" "0.0" vs LY";0.0" vs LY"
+		displayFolder: Comparisons
+		lineageTag: ba409137-f6dc-5d0e-a920-b448d5627f52
+
+	/// Average Days Late: difference against the same days of last year; blank unless one year is selected.
+	measure 'Average Days Late vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Average Days Late], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), [Average Days Late] - Prev )
+		formatString: \▲" "0.0" vs LY";\▼" "0.0" vs LY";0.0" vs LY"
+		displayFolder: Comparisons
+		lineageTag: a61d5ce6-4d94-5f27-9caa-9a2b9f3a72d6
+
+	/// Freight % of Revenue: change in percentage points against the same days of last year; blank unless one year is selected.
+	measure 'Freight % of Revenue vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Freight % of Revenue], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), ( [Freight % of Revenue] - Prev ) * 100 )
+		formatString: \▲" "0.0" pts vs LY";\▼" "0.0" pts vs LY";0.0" pts vs LY"
+		displayFolder: Comparisons
+		lineageTag: 5f07fc54-676f-5371-8cc0-65c20a4fbcd3
+
+	/// Late Deliveries %: change in percentage points against the same days of last year; blank unless one year is selected.
+	measure 'Late Deliveries % vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Late Deliveries %], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), ( [Late Deliveries %] - Prev ) * 100 )
+		formatString: \▲" "0.0" pts vs LY";\▼" "0.0" pts vs LY";0.0" pts vs LY"
+		displayFolder: Comparisons
+		lineageTag: f31bcdc0-5f4d-5faf-9c26-382e2bcaeab7
+
+	/// Cancellation %: change in percentage points against the same days of last year; blank unless one year is selected.
+	measure 'Cancellation % vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Cancellation %], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), ( [Cancellation %] - Prev ) * 100 )
+		formatString: \▲" "0.0" pts vs LY";\▼" "0.0" pts vs LY";0.0" pts vs LY"
+		displayFolder: Comparisons
+		lineageTag: e954f6d7-e017-5de9-89cc-68cdc5751f4f
+
+	/// One Star %: change in percentage points against the same days of last year; blank unless one year is selected.
+	measure 'One Star % vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [One Star %], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), ( [One Star %] - Prev ) * 100 )
+		formatString: \▲" "0.0" pts vs LY";\▼" "0.0" pts vs LY";0.0" pts vs LY"
+		displayFolder: Comparisons
+		lineageTag: ef475494-b417-53d4-8b84-54a28afc80bb
+
+	/// Five Star %: change in percentage points against the same days of last year; blank unless one year is selected.
+	measure 'Five Star % vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Five Star %], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), ( [Five Star %] - Prev ) * 100 )
+		formatString: \▲" "0.0" pts vs LY";\▼" "0.0" pts vs LY";0.0" pts vs LY"
+		displayFolder: Comparisons
+		lineageTag: f1bdfd05-0fb6-5373-b112-89e9b9f250f1
+
+	/// Review Rate %: change in percentage points against the same days of last year; blank unless one year is selected.
+	measure 'Review Rate % vs LY' =
+			VAR LastDay = [Last Sale Date]
+			VAR Prev = CALCULATE ( [Review Rate %], SAMEPERIODLASTYEAR ( 'Date'[Date] ), KEEPFILTERS ( 'Date'[Date] <= EDATE ( LastDay, -12 ) ) )
+			RETURN
+			    IF ( HASONEVALUE ( 'Date'[Year] ) && NOT ISBLANK ( Prev ), ( [Review Rate %] - Prev ) * 100 )
+		formatString: \▲" "0.0" pts vs LY";\▼" "0.0" pts vs LY";0.0" pts vs LY"
+		displayFolder: Comparisons
+		lineageTag: 08753661-7e24-5df7-829c-b6852d5473f2
+
+	/// Hidden: hex colour of the comparison line Orders vs LY, green for good, red for bad, grey for none.
+	measure 'Orders vs LY CF' = VAR v = [Orders vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: ba3cf70e-803c-5c9f-b065-f2afcc592a70
+
+	/// Hidden: hex colour of the comparison line Average Order Value vs LY, green for good, red for bad, grey for none.
+	measure 'Average Order Value vs LY CF' = VAR v = [Average Order Value vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 78b6d819-09dc-5d55-bf7f-38f1991eac1e
+
+	/// Hidden: hex colour of the comparison line Customers vs LY, green for good, red for bad, grey for none.
+	measure 'Customers vs LY CF' = VAR v = [Customers vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 923aab77-9ede-5328-8196-b42f92ac9320
+
+	/// Hidden: hex colour of the comparison line Items Sold vs LY, green for good, red for bad, grey for none.
+	measure 'Items Sold vs LY CF' = VAR v = [Items Sold vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 85aaccfe-6940-5954-b4df-c75f78343a4c
+
+	/// Hidden: hex colour of the comparison line Average Item Price vs LY, green for good, red for bad, grey for none.
+	measure 'Average Item Price vs LY CF' = VAR v = [Average Item Price vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: b1814cda-0fd1-5be2-8682-50c3d92df1a7
+
+	/// Hidden: hex colour of the comparison line Revenue per Customer vs LY, green for good, red for bad, grey for none.
+	measure 'Revenue per Customer vs LY CF' = VAR v = [Revenue per Customer vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: e2fff1b6-96bb-5d03-95bf-3b897ba145e7
+
+	/// Hidden: hex colour of the comparison line New Customers vs LY, green for good, red for bad, grey for none.
+	measure 'New Customers vs LY CF' = VAR v = [New Customers vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: b5ac4168-91fc-5c97-a28c-96cda46b2494
+
+	/// Hidden: hex colour of the comparison line Orders per Customer vs LY, green for good, red for bad, grey for none.
+	measure 'Orders per Customer vs LY CF' = VAR v = [Orders per Customer vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 1057d3d4-b2bd-5f2c-bbb1-504b7a5c36d6
+
+	/// Hidden: hex colour of the comparison line Late Orders vs LY, green for good, red for bad, grey for none.
+	measure 'Late Orders vs LY CF' = VAR v = [Late Orders vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#C2410C", IF ( v < 0, "#2E9E6B", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: fac690a5-5c4b-5bdd-95d0-fee9c2b9aa5e
+
+	/// Hidden: hex colour of the comparison line Active Sellers vs LY, green for good, red for bad, grey for none.
+	measure 'Active Sellers vs LY CF' = VAR v = [Active Sellers vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 8d3a7488-cc3c-5b65-be02-54b78d24aa14
+
+	/// Hidden: hex colour of the comparison line Revenue per Seller vs LY, green for good, red for bad, grey for none.
+	measure 'Revenue per Seller vs LY CF' = VAR v = [Revenue per Seller vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 3f5e6442-f509-55fd-a8d0-e44c32967038
+
+	/// Hidden: hex colour of the comparison line Categories With Sales vs LY, green for good, red for bad, grey for none.
+	measure 'Categories With Sales vs LY CF' = VAR v = [Categories With Sales vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 0bdcd7eb-a504-507c-9f1f-c8b7d4a9c198
+
+	/// Hidden: hex colour of the comparison line Average Review vs LY, green for good, red for bad, grey for none.
+	measure 'Average Review vs LY CF' = VAR v = [Average Review vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: a43eee6d-2961-58b8-949e-8435cdfaab4f
+
+	/// Hidden: hex colour of the comparison line Average Delivery Days vs LY, green for good, red for bad, grey for none.
+	measure 'Average Delivery Days vs LY CF' = VAR v = [Average Delivery Days vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#C2410C", IF ( v < 0, "#2E9E6B", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 7e282d24-d13b-5fae-8865-f339f64c10e4
+
+	/// Hidden: hex colour of the comparison line Average Days Late vs LY, green for good, red for bad, grey for none.
+	measure 'Average Days Late vs LY CF' = VAR v = [Average Days Late vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#C2410C", IF ( v < 0, "#2E9E6B", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: e43b2768-92d7-5ac5-8ec0-316361e73669
+
+	/// Hidden: hex colour of the comparison line Freight % of Revenue vs LY, green for good, red for bad, grey for none.
+	measure 'Freight % of Revenue vs LY CF' = VAR v = [Freight % of Revenue vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#C2410C", IF ( v < 0, "#2E9E6B", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: a5ab5c07-0e24-5951-8c2a-31ba0c27e365
+
+	/// Hidden: hex colour of the comparison line Late Deliveries % vs LY, green for good, red for bad, grey for none.
+	measure 'Late Deliveries % vs LY CF' = VAR v = [Late Deliveries % vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#C2410C", IF ( v < 0, "#2E9E6B", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 667ba4bc-5683-50be-a5ba-f39ffad31400
+
+	/// Hidden: hex colour of the comparison line Cancellation % vs LY, green for good, red for bad, grey for none.
+	measure 'Cancellation % vs LY CF' = VAR v = [Cancellation % vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#C2410C", IF ( v < 0, "#2E9E6B", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 90bce17c-60c3-55d7-84f8-d9f6263a4389
+
+	/// Hidden: hex colour of the comparison line One Star % vs LY, green for good, red for bad, grey for none.
+	measure 'One Star % vs LY CF' = VAR v = [One Star % vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#C2410C", IF ( v < 0, "#2E9E6B", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 01723652-e153-5e57-afd8-32a4021cb43c
+
+	/// Hidden: hex colour of the comparison line Five Star % vs LY, green for good, red for bad, grey for none.
+	measure 'Five Star % vs LY CF' = VAR v = [Five Star % vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: acc7f418-2fe8-54d6-a21f-7d967ded21d9
+
+	/// Hidden: hex colour of the comparison line Review Rate % vs LY, green for good, red for bad, grey for none.
+	measure 'Review Rate % vs LY CF' = VAR v = [Review Rate % vs LY] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 4d26475c-b614-54a9-81a5-3728ca4d2e1f
+
+	/// Hidden: hex colour of the comparison line Revenue vs LY %, green for good, red for bad, grey for none.
+	measure 'Revenue vs LY % CF' = VAR v = [Revenue vs LY %] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 528fe16e-2e98-56e1-a33c-72b5693f70b3
+
+	/// Hidden: hex colour of the comparison line Review Gap Late vs On Time, green for good, red for bad, grey for none.
+	measure 'Review Gap Late vs On Time CF' = VAR v = [Review Gap Late vs On Time] RETURN IF ( ISBLANK ( v ), "#8A94A0", IF ( v > 0, "#2E9E6B", IF ( v < 0, "#C2410C", "#8A94A0" ) ) )
+		isHidden
+		displayFolder: Colours
+		lineageTag: 45d25b39-f47d-5be2-bc9d-3542a8220aeb
+
+	column Value
+		dataType: int64
+		isHidden
+		lineageTag: e1d5f417-1ee7-5bb5-b086-4eca583b2bc3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = calculated
+		mode: import
+		source = {1}
+

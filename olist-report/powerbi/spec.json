@@ -1,0 +1,245 @@
+{
+  "client": "Olist",
+  "report": "Olist marketplace report",
+  "tagline": "Orders, delivery and reviews of a Brazilian marketplace, Sep 2016 to Oct 2018",
+  "logo": "powerbi/brand/logo.png",
+  "cover": {
+    "id": "pg00Cover",
+    "title": [
+      "Olist",
+      "marketplace report"
+    ],
+    "lines": [
+      "Eight pages, one question each.",
+      "Start with Overview, or pick a tile."
+    ]
+  },
+  "pages": [
+    {
+      "id": "pg01Overview",
+      "label": "Overview",
+      "icon": "dashboard",
+      "title": "How is the business doing?",
+      "sub": "Revenue, orders, customers and reviews",
+      "tile": "Revenue, orders, customers and reviews",
+      "kpis": [
+        "money",
+        "cart",
+        "invoice",
+        "clients",
+        "star"
+      ],
+      "rows": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "slicers": [
+        150,
+        150
+      ]
+    },
+    {
+      "id": "pg02Sales",
+      "label": "Sales",
+      "icon": "report",
+      "title": "Are we growing against last year?",
+      "sub": "Revenue against the same days of last year",
+      "tile": "Growth against last year, and where",
+      "kpis": [
+        "report",
+        "package",
+        "coin",
+        "truck",
+        "payments"
+      ],
+      "rows": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "slicers": [
+        150,
+        150
+      ]
+    },
+    {
+      "id": "pg03Products",
+      "label": "Products",
+      "icon": "package",
+      "title": "What sells?",
+      "sub": "Categories, prices and items sold",
+      "tile": "Categories, prices and items sold",
+      "kpis": [
+        "money",
+        "package",
+        "puzzle",
+        "coin",
+        "trophy"
+      ],
+      "rows": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "slicers": [
+        150,
+        150
+      ]
+    },
+    {
+      "id": "pg04Customers",
+      "label": "Customers",
+      "icon": "clients",
+      "title": "Who buys, and do they come back?",
+      "sub": "New and returning customers by place",
+      "tile": "New and returning customers by place",
+      "kpis": [
+        "clients",
+        "rocket",
+        "check",
+        "cart",
+        "payments"
+      ],
+      "rows": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "slicers": [
+        150,
+        150
+      ]
+    },
+    {
+      "id": "pg05Delivery",
+      "label": "Delivery",
+      "icon": "truck",
+      "title": "Do orders arrive when promised?",
+      "sub": "Late deliveries, delivery days and cancellations",
+      "tile": "Late deliveries and delivery days",
+      "kpis": [
+        "warning",
+        "calendar",
+        "ageing",
+        "truck",
+        "clipboard"
+      ],
+      "rows": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "slicers": [
+        150,
+        150
+      ]
+    },
+    {
+      "id": "pg06Reviews",
+      "label": "Reviews",
+      "icon": "star",
+      "title": "How do customers rate us?",
+      "sub": "Scores, and what drags them down",
+      "tile": "Scores, and what drags them down",
+      "kpis": [
+        "star",
+        "chart-down",
+        "trophy",
+        "memo",
+        "ageing"
+      ],
+      "rows": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "slicers": [
+        150,
+        150
+      ]
+    },
+    {
+      "id": "pg07Sellers",
+      "label": "Sellers",
+      "icon": "laptop",
+      "title": "Who sells, and who delivers late?",
+      "sub": "Revenue, lateness and reviews by seller",
+      "tile": "Revenue, lateness and reviews by seller",
+      "kpis": [
+        "laptop",
+        "coin",
+        "warning",
+        "star",
+        "truck"
+      ],
+      "rows": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "slicers": [
+        150,
+        150
+      ]
+    },
+    {
+      "id": "pg08DataTable",
+      "label": "Data table",
+      "icon": "excel-sheet",
+      "title": "Can I take the numbers to Excel?",
+      "sub": "Month and state, ready to copy",
+      "tile": "Month and state, ready to copy",
+      "kpis": [
+        "money",
+        "cart",
+        "warning",
+        "star"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "slicers": [
+        150,
+        150
+      ]
+    }
+  ]
+}

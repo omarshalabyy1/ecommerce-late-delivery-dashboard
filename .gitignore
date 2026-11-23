@@ -3,3 +3,9 @@ data/input/*.csv
 output/
 .ipynb_checkpoints/
 __pycache__/
+
+# Power BI project: local caches and the generated tables (rebuilt by olist-report/pipeline/build_star.py)
+olist-report/data/
+olist-report/**/.pbi/
+olist-report-bisect/
+olist-report-old/

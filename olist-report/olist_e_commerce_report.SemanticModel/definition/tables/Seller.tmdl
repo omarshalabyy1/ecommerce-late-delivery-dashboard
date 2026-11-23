@@ -1,0 +1,48 @@
+table Seller
+	lineageTag: 5c6938e0-179e-5d0a-ac5b-e6644153e794
+
+	column 'Seller Key'
+		dataType: string
+		isHidden
+		lineageTag: 94f3e1a0-eda9-595b-96e8-9164f5f4daf9
+		summarizeBy: none
+		sourceColumn: Seller Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Seller
+		dataType: string
+		lineageTag: eee393f7-7ae3-5975-8497-d92bc575f70a
+		summarizeBy: none
+		sourceColumn: Seller
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Seller City'
+		dataType: string
+		lineageTag: e78cbd94-3ff7-5333-8148-72e0595410e7
+		summarizeBy: none
+		sourceColumn: Seller City
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Seller State'
+		dataType: string
+		lineageTag: 07f3bf0f-d044-58ca-ac3c-c4faf1edf5a7
+		summarizeBy: none
+		sourceColumn: Seller State
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Seller = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(#"Data Folder" & "\Seller.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    #"Changed Types" = Table.TransformColumnTypes(#"Promoted Headers", {{"Seller Key", type text}, {"Seller", type text}, {"Seller City", type text}, {"Seller State", type text}}, "en-US")
+				in
+				    #"Changed Types"
+
+	annotation PBI_ResultType = Table
+

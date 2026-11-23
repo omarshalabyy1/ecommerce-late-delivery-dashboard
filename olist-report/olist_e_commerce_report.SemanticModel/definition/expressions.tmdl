@@ -1,0 +1,5 @@
+expression 'Data Folder' = "C:\Users\DELL\GitHub\sales-performance-dashboard\olist-report\data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 958223ad-127b-55a6-9f33-0b933f54938d
+
+	annotation PBI_ResultType = Text
+

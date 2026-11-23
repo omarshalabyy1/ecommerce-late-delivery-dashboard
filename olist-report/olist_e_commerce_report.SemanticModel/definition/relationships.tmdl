@@ -1,0 +1,48 @@
+relationship 3607d3ca-0855-5617-9a91-b48a699b5af2
+	fromColumn: Sales.'Purchase Date'
+	toColumn: Date.Date
+
+relationship 9e6e63d2-f14f-560f-9d23-11466d2e3bb5
+	fromColumn: Sales.'Customer Key'
+	toColumn: Customer.'Customer Key'
+
+relationship a8458ac2-187d-5e63-b8d0-a55f941c61aa
+	fromColumn: Sales.'Geography Key'
+	toColumn: Geography.'Geography Key'
+
+relationship 3069595e-88da-5101-aa31-135a7ce6295c
+	fromColumn: Sales.'Product Key'
+	toColumn: Product.'Product Key'
+
+relationship 0a52b22e-96e2-5928-838f-71ec4bcecd3b
+	fromColumn: Sales.'Seller Key'
+	toColumn: Seller.'Seller Key'
+
+relationship ecc35a8d-b084-50fb-a7aa-bf429a5d6766
+	fromColumn: Sales.'Order Status Key'
+	toColumn: 'Order Status'.'Order Status Key'
+
+relationship 018ee984-038c-5bd7-abfe-8485b47f4c7f
+	fromColumn: Sales.'Price Band Key'
+	toColumn: 'Price Band'.'Price Band Key'
+
+relationship 0fcef780-b6a5-5395-a207-f00151c4e476
+	fromColumn: Payments.'Purchase Date'
+	toColumn: Date.Date
+
+relationship 6c2cac18-ec6d-534b-b50f-f38778780bd4
+	fromColumn: Payments.'Customer Key'
+	toColumn: Customer.'Customer Key'
+
+relationship bd20a7e4-8fcb-5068-bbb8-af98ffe7ac1d
+	fromColumn: Payments.'Geography Key'
+	toColumn: Geography.'Geography Key'
+
+relationship c73f37d7-a615-5624-81e0-aaa989ddfa2c
+	fromColumn: Payments.'Order Status Key'
+	toColumn: 'Order Status'.'Order Status Key'
+
+relationship a0ddfbcb-a334-5b33-b3da-62a5cc674ea5
+	fromColumn: Payments.'Payment Type Key'
+	toColumn: 'Payment Type'.'Payment Type Key'
+

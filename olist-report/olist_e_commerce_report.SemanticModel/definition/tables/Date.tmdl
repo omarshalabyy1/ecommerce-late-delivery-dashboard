@@ -1,0 +1,113 @@
+table Date
+	lineageTag: 20134588-f146-55d0-9f8e-3dcf77cd758e
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: yyyy-mm-dd
+		lineageTag: 9389d0a6-951b-57ec-b750-f449e4e82330
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		lineageTag: ed3a6b60-f475-5fe4-b29b-b1f1773266c7
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: 26fa03bf-f3f6-5706-9e87-53b4babc5575
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		isHidden
+		lineageTag: 7606dbe9-7420-52e2-aa9d-7875d89deea4
+		summarizeBy: none
+		sourceColumn: Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 05a57401-a97e-5c84-8d8c-ad727447cc81
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month'
+		dataType: string
+		lineageTag: 15747216-3276-5137-8611-309b66fa81bf
+		summarizeBy: none
+		sourceColumn: Year Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday Number'
+		dataType: int64
+		isHidden
+		lineageTag: 984a2e94-7e6f-57d3-90d6-bdb4036926fd
+		summarizeBy: none
+		sourceColumn: Weekday Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekday
+		dataType: string
+		lineageTag: 5a99aebe-c948-5ee1-8691-aac0f7aeaa3b
+		summarizeBy: none
+		sourceColumn: Weekday
+		sortByColumn: 'Weekday Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Start'
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: d8229a14-1258-500f-a93b-e2bb283ec3fd
+		summarizeBy: none
+		sourceColumn: Month Start
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quarter Label'
+		dataType: string
+		lineageTag: cbb46e29-d09f-5d86-9b32-fabe9fa348ff
+		summarizeBy: none
+		sourceColumn: Quarter Label
+		sortByColumn: 'Year Quarter'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Quarter'
+		dataType: int64
+		isHidden
+		lineageTag: 78b8278a-dfeb-5863-bcdd-c9b97f999130
+		summarizeBy: none
+		sourceColumn: Year Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(#"Data Folder" & "\Date.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    #"Changed Types" = Table.TransformColumnTypes(#"Promoted Headers", {{"Date", type date}, {"Year", Int64.Type}, {"Quarter", type text}, {"Month Number", Int64.Type}, {"Month", type text}, {"Year Month", type text}, {"Weekday Number", Int64.Type}, {"Weekday", type text}, {"Month Start", type date}, {"Quarter Label", type text}, {"Year Quarter", Int64.Type}}, "en-US")
+				in
+				    #"Changed Types"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,98 @@
+table Payments
+	lineageTag: b42f05ff-029f-5428-be82-eec08ad6fcec
+
+	column 'Order Id'
+		dataType: string
+		isHidden
+		lineageTag: 25e4bedf-74a5-5de7-9cbf-7afcd107c9e6
+		summarizeBy: none
+		sourceColumn: Order Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Payment Sequence'
+		dataType: int64
+		isHidden
+		lineageTag: ed4d999f-c579-5bd0-8ae1-7e383a133ff7
+		summarizeBy: none
+		sourceColumn: Payment Sequence
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Purchase Date'
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 25db325e-7366-52fc-a551-e80565821d57
+		summarizeBy: none
+		sourceColumn: Purchase Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Customer Key'
+		dataType: string
+		isHidden
+		lineageTag: fd7d364a-083a-53fa-a5c6-529f1c9ac4ed
+		summarizeBy: none
+		sourceColumn: Customer Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Geography Key'
+		dataType: string
+		isHidden
+		lineageTag: 3b07fd95-6193-5e5a-a012-406ac2dc17c4
+		summarizeBy: none
+		sourceColumn: Geography Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Status Key'
+		dataType: string
+		isHidden
+		lineageTag: 9b7f133e-2829-55f3-896e-090f3f446daf
+		summarizeBy: none
+		sourceColumn: Order Status Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Payment Type Key'
+		dataType: string
+		isHidden
+		lineageTag: e5c82936-b5bf-51ef-84d6-1b46cc0ab874
+		summarizeBy: none
+		sourceColumn: Payment Type Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Installments
+		dataType: int64
+		isHidden
+		lineageTag: 5a83dd06-be2c-55e9-8847-631499885f79
+		summarizeBy: none
+		sourceColumn: Installments
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Payment Value'
+		dataType: decimal
+		isHidden
+		formatString: #,##0.00
+		lineageTag: 28004806-eb19-5e2a-a2df-57523e15da09
+		summarizeBy: none
+		sourceColumn: Payment Value
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Payments = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(#"Data Folder" & "\Payments.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    #"Changed Types" = Table.TransformColumnTypes(#"Promoted Headers", {{"Order Id", type text}, {"Payment Sequence", Int64.Type}, {"Purchase Date", type date}, {"Customer Key", type text}, {"Geography Key", type text}, {"Order Status Key", type text}, {"Payment Type Key", type text}, {"Installments", Int64.Type}, {"Payment Value", Currency.Type}}, "en-US")
+				in
+				    #"Changed Types"
+
+	annotation PBI_ResultType = Table
+

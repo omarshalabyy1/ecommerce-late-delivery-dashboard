@@ -1,0 +1,153 @@
+table Sales
+	lineageTag: 1ef3afd9-f8a9-5c06-a97b-11848585f0d6
+
+	column 'Order Id'
+		dataType: string
+		isHidden
+		lineageTag: a8689245-c188-54cc-a961-ab393fc08e24
+		summarizeBy: none
+		sourceColumn: Order Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Line'
+		dataType: int64
+		isHidden
+		lineageTag: f7679a31-1fc1-506e-87a1-36d700f75683
+		summarizeBy: none
+		sourceColumn: Order Line
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Purchase Date'
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: ecc91de2-89b3-5bfa-8f5d-def07c7e02b1
+		summarizeBy: none
+		sourceColumn: Purchase Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Customer Key'
+		dataType: string
+		isHidden
+		lineageTag: 0a99b3cf-d7b4-52f8-a6f4-94e789d4412f
+		summarizeBy: none
+		sourceColumn: Customer Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Geography Key'
+		dataType: string
+		isHidden
+		lineageTag: 7142b311-21a8-50ac-a8c4-445c1357de5e
+		summarizeBy: none
+		sourceColumn: Geography Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product Key'
+		dataType: string
+		isHidden
+		lineageTag: 29fac51e-fb08-52bb-9065-e68106498906
+		summarizeBy: none
+		sourceColumn: Product Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Seller Key'
+		dataType: string
+		isHidden
+		lineageTag: 0b084631-5c1b-5607-ae7b-d86ec43f766d
+		summarizeBy: none
+		sourceColumn: Seller Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Status Key'
+		dataType: string
+		isHidden
+		lineageTag: 65a5dc07-2a56-524e-a44e-e9541501f0c3
+		summarizeBy: none
+		sourceColumn: Order Status Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Price Band Key'
+		dataType: string
+		isHidden
+		lineageTag: d933267a-0efe-567b-b83a-742f76900dbf
+		summarizeBy: none
+		sourceColumn: Price Band Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Price
+		dataType: decimal
+		isHidden
+		formatString: #,##0.00
+		lineageTag: 1bed0e26-0849-5013-b9b7-a2094fdacbc9
+		summarizeBy: none
+		sourceColumn: Price
+
+		annotation SummarizationSetBy = Automatic
+
+	column Freight
+		dataType: decimal
+		isHidden
+		formatString: #,##0.00
+		lineageTag: 7346065e-7271-57cd-9108-307256226981
+		summarizeBy: none
+		sourceColumn: Freight
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Review Score'
+		dataType: int64
+		isHidden
+		lineageTag: 8382fce7-dcb5-5263-bb55-0f501c310d39
+		summarizeBy: none
+		sourceColumn: Review Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Delivery Days'
+		dataType: int64
+		isHidden
+		lineageTag: a95770e3-1c7a-5880-8d48-7191a6823e5e
+		summarizeBy: none
+		sourceColumn: Delivery Days
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Days Late'
+		dataType: int64
+		isHidden
+		lineageTag: 4089315f-07af-543c-a359-2df4a7555966
+		summarizeBy: none
+		sourceColumn: Days Late
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is First Order'
+		dataType: int64
+		isHidden
+		lineageTag: e57e95f7-9150-5c34-b1a3-e014632b773f
+		summarizeBy: none
+		sourceColumn: Is First Order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sales = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(#"Data Folder" & "\Sales.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    #"Changed Types" = Table.TransformColumnTypes(#"Promoted Headers", {{"Order Id", type text}, {"Order Line", Int64.Type}, {"Purchase Date", type date}, {"Customer Key", type text}, {"Geography Key", type text}, {"Product Key", type text}, {"Seller Key", type text}, {"Order Status Key", type text}, {"Price Band Key", type text}, {"Price", Currency.Type}, {"Freight", Currency.Type}, {"Review Score", Int64.Type}, {"Delivery Days", Int64.Type}, {"Days Late", Int64.Type}, {"Is First Order", Int64.Type}}, "en-US")
+				in
+				    #"Changed Types"
+
+	annotation PBI_ResultType = Table
+

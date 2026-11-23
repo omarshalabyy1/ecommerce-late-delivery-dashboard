@@ -1,0 +1,115 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "Fluent2-CY26SU10",
+      "reportVersionAtImport": {
+        "visual": "2.14.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "OlistTheme.json",
+      "reportVersionAtImport": {
+        "visual": "2.14.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Middle'"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "Fluent2-CY26SU10",
+          "path": "BaseThemes/Fluent2-CY26SU10.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "bg_pg00Cover.png",
+          "path": "bg_pg00Cover.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_pg01Overview.png",
+          "path": "bg_pg01Overview.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_pg02Sales.png",
+          "path": "bg_pg02Sales.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_pg03Products.png",
+          "path": "bg_pg03Products.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_pg04Customers.png",
+          "path": "bg_pg04Customers.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_pg05Delivery.png",
+          "path": "bg_pg05Delivery.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_pg06Reviews.png",
+          "path": "bg_pg06Reviews.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_pg07Sellers.png",
+          "path": "bg_pg07Sellers.png",
+          "type": "Image"
+        },
+        {
+          "name": "bg_pg08DataTable.png",
+          "path": "bg_pg08DataTable.png",
+          "type": "Image"
+        },
+        {
+          "name": "OlistTheme.json",
+          "path": "OlistTheme.json",
+          "type": "CustomTheme"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}

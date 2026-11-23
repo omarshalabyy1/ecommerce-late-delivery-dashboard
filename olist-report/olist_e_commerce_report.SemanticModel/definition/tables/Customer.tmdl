@@ -1,0 +1,32 @@
+table Customer
+	lineageTag: 09faefd4-3fd6-516a-b435-959e973dbde3
+
+	column 'Customer Key'
+		dataType: string
+		isHidden
+		lineageTag: edeab052-6152-5556-9305-b961f96fb2d7
+		summarizeBy: none
+		sourceColumn: Customer Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Customer Type'
+		dataType: string
+		lineageTag: 32a8bd3d-4b69-5cba-8f75-61dfb6194069
+		summarizeBy: none
+		sourceColumn: Customer Type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customer = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(#"Data Folder" & "\Customer.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    #"Changed Types" = Table.TransformColumnTypes(#"Promoted Headers", {{"Customer Key", type text}, {"Customer Type", type text}}, "en-US")
+				in
+				    #"Changed Types"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,49 @@
+// Run in Power BI Desktop: DAX query view, or Performance analyzer. No filters selected.
+// Each value must equal the Expected column of powerbi/control-totals.md.
+EVALUATE
+ROW (
+    "Revenue", [Revenue],
+    "Orders", [Orders],
+    "Items Sold", [Items Sold],
+    "Average Order Value", [Average Order Value],
+    "Freight % of Revenue", [Freight % of Revenue],
+    "Customers", [Customers],
+    "New Customers", [New Customers],
+    "Returning Customers", [Returning Customers],
+    "Repeat Customers %", [Repeat Customers %],
+    "Delivered Orders", [Delivered Orders],
+    "Late Orders", [Late Orders],
+    "Late Deliveries %", [Late Deliveries %],
+    "Average Delivery Days", [Average Delivery Days],
+    "Average Days Late", [Average Days Late],
+    "All Orders", [All Orders],
+    "Cancellation %", [Cancellation %],
+    "Active Sellers", [Active Sellers],
+    "Reviewed Orders", [Reviewed Orders],
+    "Review Rate %", [Review Rate %],
+    "Average Review", [Average Review],
+    "One Star %", [One Star %],
+    "Five Star %", [Five Star %],
+    "Average Review On Time", [Average Review On Time],
+    "Average Review Late", [Average Review Late],
+    "Payment Value", [Payment Value],
+    "Average Payment per Order", [Average Payment per Order],
+    "Credit Card Share %", [Credit Card Share %],
+    "Boleto Share %", [Boleto Share %],
+    "Average Installments", [Average Installments]
+)
+
+// Second check: the comparison measures with one year selected. Expected values: powerbi/control-totals-2018.md
+EVALUATE
+CALCULATETABLE (
+    ROW (
+        "Last Sale Date", [Last Sale Date],
+        "Revenue", [Revenue],
+        "Revenue LY", [Revenue LY],
+        "Revenue vs LY %", [Revenue vs LY %],
+        "Orders vs LY", [Orders vs LY],
+        "Late Deliveries % vs LY (pts)", [Late Deliveries % vs LY],
+        "Average Review vs LY", [Average Review vs LY]
+    ),
+    'Date'[Year] = 2018
+)
