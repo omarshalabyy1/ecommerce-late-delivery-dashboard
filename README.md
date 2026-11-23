@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100%" src="docs/header.svg" alt="Marketplace delivery dashboard: 96,478 orders. Orders that arrived late scored 2.27 stars against 4.29 on time, and the top 10% of sellers brought 67% of revenue.">
+  <img width="100%" src="docs/header.svg" alt="E-commerce late delivery dashboard: 96,478 orders. Orders that arrived late scored 2.27 stars against 4.29 on time, and the top 10% of sellers brought 67% of revenue.">
 </p>
 
 <p align="center">

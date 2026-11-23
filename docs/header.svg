@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="1000" height="300" role="img" aria-label="Marketplace delivery dashboard. 96,478 orders: orders that arrived late scored 2.27 stars against 4.29 on time, and the top 10% of sellers brought 67% of revenue. 2018 revenue up 145.1%; 6.8% of orders arrive late. A terminal builds the model tables and checks the control totals, then Power BI opens the project: 9 pages, 115 measures.">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="1000" height="300" role="img" aria-label="E-commerce late delivery dashboard. 96,478 orders: orders that arrived late scored 2.27 stars against 4.29 on time, and the top 10% of sellers brought 67% of revenue. 2018 revenue up 145.1%; 6.8% of orders arrive late. A terminal builds the model tables and checks the control totals, then Power BI opens the project: 9 pages, 115 measures.">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0B1220"/>
@@ -45,8 +45,8 @@
   <rect x="352" y="202" width="9" height="16" fill="#4ADE80" class="blink"/>
 
   <!-- Title -->
-  <text x="420" y="88" class="sans" font-size="13" font-weight="600" letter-spacing="1.5" fill="#5EEAD4">PROJECT · MARKETPLACE DELIVERY</text>
-  <text x="420" y="130" class="sans" font-size="32" font-weight="700" fill="#FFFFFF">Marketplace delivery dashboard</text>
+  <text x="420" y="88" class="sans" font-size="13" font-weight="600" letter-spacing="1.5" fill="#5EEAD4">PROJECT · LATE DELIVERY</text>
+  <text x="420" y="130" class="sans" font-size="29" font-weight="700" fill="#FFFFFF">E-commerce late delivery dashboard</text>
   <text x="421" y="162" class="sans" font-size="15" fill="#CBD5E1">96,478 orders: orders that arrived late scored 2.27 stars against 4.29 on time,</text>
   <text x="421" y="184" class="sans" font-size="15" fill="#CBD5E1">and the top 10% of sellers brought 67% of revenue.</text>
 

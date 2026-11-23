@@ -32,7 +32,7 @@ Every file is read as UTF-8 (`Encoding = 65001`) so accented city names stay cor
 this repo's `output\` folder, ending with a backslash. Or paste this in a blank query and change the path:
 
 ```m
-"C:\Users\you\GitHub\sales-performance-dashboard\output\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+"C:\Users\you\GitHub\ecommerce-late-delivery-dashboard\output\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
 ```
 
 ## fact_sales (load)

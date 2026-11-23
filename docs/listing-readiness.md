@@ -45,7 +45,7 @@ What the scripts cannot show: that the DAX measures return these values inside P
 2. `output/` (ignored by git): the five tables the notebook writes, taken from the clean-copy run, so the report can be refreshed on this machine at once.
 3. This file.
 
-Only `powerbi/README.md` and this file were committed. `olist-report/` and the uncommitted one-line path edit in `powerbi/01-power-query.md` (its example path now says `olist-power-bi-report`, which is the name of the GitHub remote) were left as found.
+Only `powerbi/README.md` and this file were committed. `olist-report/` and the uncommitted one-line path edit in `powerbi/01-power-query.md` (its example path says `ecommerce-late-delivery-dashboard`, the GitHub repo name since 2026-11-23) were left as found.
 
 ## Omar must do by hand
 
@@ -53,4 +53,4 @@ Only `powerbi/README.md` and this file were committed. `olist-report/` and the u
 2. Retake `powerbi/screenshots/05-delivery.png` with no visual selected (click an empty part of the canvas first). Optionally widen the table in `powerbi/screenshots/04-sellers.png`.
 3. Pick the gallery from the five files. Suggested order, cover first: `01-overview.png`, `02-sales.png`, `04-sellers.png`, `05-delivery.png`. `gigs\README.md` has no listing or file names for this dashboard, so these names are used as they are. The images show Brazilian states and BRL but not the word Olist; check each platform's rules before uploading.
 4. Decide about `olist-report/`: open it in Desktop and verify it before using it anywhere, or leave it out of every listing. Also commit or revert the edit in `powerbi/01-power-query.md`.
-5. In `client-radar\profile.md` the project link is `github.com/omarshalabyy1/sales-performance-dashboard`; the remote is now `olist-power-bi-report`. GitHub redirects the old name, but update the link when convenient. That file is outside this repo and was not touched.
+5. In `client-radar\profile.md` the project link is `github.com/omarshalabyy1/sales-performance-dashboard`; the repo was renamed to `ecommerce-late-delivery-dashboard`. GitHub redirects the old name, but update the link when convenient. That file is outside this repo and was not touched.
